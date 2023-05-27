@@ -28,8 +28,11 @@ app.post('/imageUpload', upload.single('image'), (req, res) => {
 		return res.status(400).json({ error: 'No file provided' });
 	}
 	// Process the uploaded file as needed (e.g., save to a specific location
-	const imageUrl = `http://localhost:3000/uploads/${req.file.filename}`; // Adjust the base URL and folder path as needed
-	res.status(200).json({ data: {imageUrl}, msg: "Image Upload Successfully" });
+	
+	// const imageUrl = `http://localhost:3000/uploads/${req.file.filename}`; // Adjust the base URL and folder path as needed
+	const imageUrl = `https://todolost.netlify.app/profile/${req.file.filename}`; // Adjust the base URL and folder path as needed
+
+	res.status(200).json({ data: { imageUrl }, msg: "Image Upload Successfully" });
 });
 
 app.use('/uploads', express.static('uploads')); // Serve uploaded files statically
