@@ -8,7 +8,7 @@ const users = require('../../models/user')
 // Create user
 router.post('/user', async (req, res) => {
 
-	const alreadyExist = await users.findOne({ email: req.body.email });
+	const alreadyExist = await users.findOne({ $and: [{ email: req.body.email }, { isActive: true }] });
 	if (alreadyExist) {
 		res.status(200).json({ data: {}, msg: "User Already exist. Please Login" });
 		return;
@@ -33,6 +33,7 @@ router.post('/user', async (req, res) => {
 router.post('/login', async (req, res) => {
 	try {
 		const user = await users.findOne({ $and: [{ email: req.body.email }, { isActive: true }] });
+		console.log('user: ', user);
 		if (user) {
 			if (user.password === req.body.password) {
 				res.status(200).json({ data: user, msg: "Login Successfully" });
@@ -83,7 +84,7 @@ router.patch('/user/:id', async (req, res) => {
 router.get('/user/:id', async (req, res) => {
 	try {
 		const user = await users.findById(req.params.id);
-		if (!user) throw Error('Something went wrong while updating the user!');
+		if (!user) throw Error('Something went wrong while getting the user details!');
 		res.status(200).json({ data: user, msg: "user details fetched successfully" });
 	}
 	catch (err) {
@@ -96,7 +97,7 @@ router.delete('/user/:id', async (req, res) => {
 	try {
 		const user = await users.findByIdAndDelete(req.params.id);
 		if (!user) throw Error('No user found');
-		res.status(200).json({ data: user, msg: "User deleted successfully" });
+		res.status(200).json({ data: user, msg: "user deleted successfully" });
 	}
 	catch (err) {
 		res.status(400).json({ msg: err })
